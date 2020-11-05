@@ -30,18 +30,16 @@ public class HTTPResponse extends ResponseProxy {
 	private final Response response;
 
 	private String body = null;
+	private int statusCode;
 
 	private HTTPResponse(Response response) {
 		super(response);
 		this.response = response;
+		this.statusCode = response.code();
 	}
 
 	public Response response() {
 		return response;
-	}
-
-	public int statusCode() {
-		return code();
 	}
 
 	public InputStream byteStream() {
