@@ -24,10 +24,12 @@ import net.grinder.scriptengine.ScriptEngineService.ScriptEngine;
 import net.grinder.scriptengine.ScriptExecutionException;
 import net.grinder.scriptengine.exception.AbstractExceptionProcessor;
 import org.codehaus.groovy.control.CompilerConfiguration;
+import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
+import org.ngrinder.http.ThreadContextHTTPClient;
 
 import java.io.IOException;
 
@@ -118,6 +120,11 @@ public class GroovyScriptEngine implements ScriptEngine {
 		private GroovyWorkerRunnable(GrinderContextExecutor groovyRunner) throws EngineException {
 			this.m_groovyThreadRunner = groovyRunner;
 			this.notifier.addListener(new RunListener() {
+				@Override
+				public void testFinished(Description description) {
+					ThreadContextHTTPClient.reset();
+				}
+
 				@Override
 				public void testFailure(Failure failure) {
 					// Skip Generic Shutdown... It's not failure.
