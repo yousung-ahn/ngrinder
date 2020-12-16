@@ -40,6 +40,10 @@ public class ThreadContextHTTPClient {
 	}
 
 	public static void reset() {
+		if (okHttpClientThreadLocal == null) {
+			return;
+		}
+
 		OkHttpClient client = okHttpClientThreadLocal.get();
 		if (client != null) {
 			client.connectionPool().evictAll();

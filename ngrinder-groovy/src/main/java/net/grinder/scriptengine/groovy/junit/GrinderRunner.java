@@ -39,7 +39,6 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
-import org.ngrinder.http.ThreadContextHTTPClient;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -297,10 +296,6 @@ public class GrinderRunner extends BlockJUnit4ClassRunner {
 
 	protected void registerRunNotifierListener(RunNotifier notifier) {
 		notifier.addFirstListener(new RunListener() {
-			@Override
-			public void testFinished(Description description) throws Exception {
-				ThreadContextHTTPClient.reset();
-			}
 
 			@Override
 			public void testRunStarted(Description description) {
