@@ -18,7 +18,9 @@ import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.nio.file.Paths;
 import java.security.AllPermission;
 import java.security.Permission;
 import java.util.ArrayList;
@@ -109,10 +111,16 @@ public class NGrinderSecurityManager extends SecurityManager {
 		if (isNotEmpty(pythonCache)) {
 			writeAllowedDirectory.add(pythonCache);
 		}
+
+		String tempDirectoryCanonicalPath = getTempDirectoryCanonicalPath();
+
 		writeAllowedDirectory.add(workDirectory);
 		writeAllowedDirectory.add(logDirectory);
 		writeAllowedDirectory.add(getTempDirectoryPath());
+		writeAllowedDirectory.add(tempDirectoryCanonicalPath);
+
 		deleteAllowedDirectory.add(workDirectory);
+		deleteAllowedDirectory.add(tempDirectoryCanonicalPath);
 	}
 
 	private static boolean isNotEmpty(String str) {
@@ -129,6 +137,15 @@ public class NGrinderSecurityManager extends SecurityManager {
 	 */
 	private static String getTempDirectoryPath() {
 		return System.getProperty("java.io.tmpdir");
+	}
+
+	private static String getTempDirectoryCanonicalPath() {
+		String javaTempDirPath = getTempDirectoryPath();
+		try {
+			return Paths.get(javaTempDirPath).toRealPath().toString();
+		} catch (IOException e) {
+			return javaTempDirPath;
+		}
 	}
 
 	/**
